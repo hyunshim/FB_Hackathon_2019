@@ -102,7 +102,7 @@ class QuestCreator extends React.Component {
             console.log("create_quest:", result);
 
             this.props.onClose();
-        }).catch(()=>{
+        }).catch(() => {
             this.setState({
                 creating: false
             });
@@ -200,7 +200,8 @@ class QuestCreator extends React.Component {
                     </div>
                 </CardContent>
                 <CardActions>
-                    <Button disabled={this.state.creating} color={"primary"} onClick={this.create}><Quill/> Post Quest</Button>
+                    <Button disabled={this.state.creating} color={"primary"} onClick={this.create}><Quill/> Post
+                        Quest</Button>
                 </CardActions>
             </Card>
         </Dialog>

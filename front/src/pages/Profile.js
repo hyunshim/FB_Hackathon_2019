@@ -4,20 +4,10 @@ import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import FavouriteIcon from '@material-ui/icons/Favorite';
 
-import Map from "../components/Map";
-import QuestViewer from "../components/QuestViewer";
-
 import avatar from '../images/default-avatar.png'
-import {Container, Input, Modal} from 'reactstrap';
-import { Card, Container, Input, Modal } from 'reactstrap';
+import {Card, Input, Modal} from 'reactstrap';
 import './Profile.css';
-import Quests from '../components/Quests';
-import {get_user, create_quest} from '../Utils'
-import Snackbar from "@material-ui/core/Snackbar/Snackbar";
-import IconButton from "@material-ui/core/IconButton/IconButton";
-import withStyles from "@material-ui/core/es/styles/withStyles";
-import CloseIcon from '@material-ui/icons/Close';
-import { get_user, create_quest, get_all_quests, delete_quest } from '../Utils'
+import {create_quest, delete_quest, get_all_quests, get_user} from '../Utils'
 
 
 class Profile extends React.Component {
@@ -167,9 +157,6 @@ class Profile extends React.Component {
         );
         return (
             <div>
-                <Map onDisplayQuest={this.displayQuest} ref="child" />
-                <QuestViewer onClose={this.hideQuest} display={this.state.displayQuest} />
-
                 <Modal isOpen={this.state.toggleCreateQuest}>
                     <div style={{width: "100%", padding: "20px"}}>
                         <table style={{width: "100%"}}>
