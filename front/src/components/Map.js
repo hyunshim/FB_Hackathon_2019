@@ -25,6 +25,8 @@ class Map extends Component {
             "id": "5ccd7175f780892f6b6cf523"
         }],
         createQuestCallback: (lat, long, promise) => {
+        },
+        onDisplayQuest: (point) => {
         }
     };
 
@@ -135,21 +137,12 @@ class Map extends Component {
 
                 mark.on("click", (event) => {
                     controller.selectMarker(point.id);
-                    this.setState({
-                        display: point,
-                    })
+                    this.props.onDisplayQuest(point);
                 })
             }
         }
         this.setState({
             markers: markers
-        })
-    };
-
-    onDeselectQuest = () =>{
-        this.state.markerController.deselectMarker();
-        this.setState({
-            display: null
         })
     };
 
@@ -234,7 +227,6 @@ class Map extends Component {
                         </Fab>
                     </div>
                 }
-                <QuestViewerWrapped display={this.state.display} onClose={this.onDeselectQuest}/>
 
 
                 <div id="map" style={mapStyle}/>
