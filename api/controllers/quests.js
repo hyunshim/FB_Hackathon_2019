@@ -12,7 +12,7 @@ exports.get_all_quests = (req, res, next) => {
                     return {
                         name: doc.name,
                         author: doc.author,
-                        location: doc.location,
+                        coordinates: doc.coordinates,
                         date: doc.date,
                         reward: doc.reward,
                         comments: doc.comments,
@@ -49,7 +49,6 @@ exports.create_quest = (req, res, next) => {
         name: req.body.tnameitle,
         author: req.body.author, // get logged in userid!
         coordinates:req.body.coordinates.split(',').map(Number),
-        date: req.body.date,
         reward: req.body.reward,
         description: req.body.description,
         imgurl: req.body.imgurl,
@@ -61,9 +60,8 @@ exports.create_quest = (req, res, next) => {
             created_quest: {
                 _id: result._id,
                 name: result.tnameitle,
-                location: result.location,
+                coordinates: result.coordinates,
                 author: result.author, // get logged in userid!
-                date: result.date,
                 reward: result.reward,
                 description: result.description,
                 imgurl: result.imgurl,
