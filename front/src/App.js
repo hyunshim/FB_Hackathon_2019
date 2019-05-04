@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {BrowserRouter} from 'react-router-dom';
 
-import Marks from './components/Marks';
+import MapView from './pages/MapView';
+import Profile from './pages/Profile';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css';
@@ -13,7 +14,8 @@ class App extends Component {
         return (
             <div id="main">
                 <BrowserRouter>
-                    <Marks/>
+                    <MapView/>
+                    <Profile/>
                 </BrowserRouter>
                 <Map/>
             </div>
