@@ -2,3 +2,7 @@
     text-align: center;
     background-color: rgb(153, 218, 255);
 }
+
+#title {
+    font-size: 2rem;
+}

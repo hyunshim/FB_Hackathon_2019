@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Button from '@material-ui/core/Button';
+import { Card } from 'reactstrap';
 import './Profile.css';
 
 import { get_user } from '../Utils'
@@ -12,14 +13,13 @@ class Profile extends React.Component {
         this.state = {
             user_id: "5ccd49096a556504ac258e94",
             user: [],
-
+            quests: ["a", "b", "c"]
         }
-        
     }
 
     get_user() {
         get_user(this.state.user_id).then(result => {
-            this.setState({user: [result.user]})
+            this.setState({ user: [result.user] })
         })
     }
 
@@ -29,23 +29,27 @@ class Profile extends React.Component {
     }
 
     render() {
-        return(
-        <div>
-            {//<Button variant="contained" color="primary">asd</Button> -->
-            }
-            {this.state.user.map((user) => {
-                return(
-                    <div id="center" key={user._id}>
-                        {user.name}
-                        {user.ph}
-                        {user.address}
-                    </div>
-                )
-            })}
-            
-        </div>
+        return (
+            <div>
+                {//<Button variant="contained" color="primary">asd</Button> -->
+                }
+                {/* {this.state.user.map((user) => {
+                    return (
+                        <div id="center">
+                            <div id="title">{user.name}</div>
+                            <div>{user.ph} | {user.address}</div>
+                            <div>Exp: {user.experience}</div>
+                        </div>
+                    )
+                })} */}
+
+                {this.state.quests.map((quest) => {
+                    return(
+                        <Card body>{quest}</Card>
+                    )
+                })}
+            </div>
         )
     }
 }
-
 export default Profile;
