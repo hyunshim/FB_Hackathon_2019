@@ -12,7 +12,7 @@ exports.get_all_quests = (req, res, next) => {
                     return {
                         name: doc.name,
                         author: doc.author,
-                        coordinates: doc.coordinates,
+                        location: doc.location,
                         date: doc.date,
                         reward: doc.reward,
                         comments: doc.comments,
@@ -48,19 +48,19 @@ exports.create_quest = (req, res, next) => {
         _id: new mongo.Types.ObjectId(),
         name: req.body.name,
         author: req.body.author, // get logged in userid!
-        coordinates:req.body.coordinates.split(',').map(Number),
+        location:req.body.location,
         reward: req.body.reward,
         description: req.body.description,
         imgurl: req.body.imgurl,
         icon: req.body.icon
     });
-    mark.save().then(result => {
+    quest.save().then(result => {
         res.status(201).json({
             message: `Created quest of id '${result._id}' successfully`,
             created_quest: {
                 _id: result._id,
                 name: result.name,
-                coordinates: result.coordinates,
+                location: result.location,
                 author: result.author, // get logged in userid!
                 reward: result.reward,
                 description: result.description,
@@ -72,7 +72,7 @@ exports.create_quest = (req, res, next) => {
 }
 
 exports.delete_quest = (req, res, next) => {
-    const id = req.params.markId;
+    const id = req.params.questId;
     Quest.findOneAndDelete({_id: id})
         .select(selectFields)
         .exec()
