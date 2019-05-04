@@ -107,7 +107,6 @@ class QuestCreator extends React.Component {
                 creating: false
             });
         });
-        this.toggleCreateQuest()
     };
 
     handleChange = (key) => {
