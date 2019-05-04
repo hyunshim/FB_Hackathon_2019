@@ -1,6 +1,6 @@
 const mongo = require('mongoose');
 
-const markSchema = mongo.Schema({
+const userSchema = mongo.Schema({
     _id: mongo.Schema.Types.ObjectId,
     name: String,
     ph: String,
@@ -8,4 +8,4 @@ const markSchema = mongo.Schema({
     experience: Number
 });
 
-module.exports = mongo.model('User', markSchema);
+module.exports = mongo.model('User', userSchema);

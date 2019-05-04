@@ -48,6 +48,7 @@ exports.create_quest = (req, res, next) => {
         _id: new mongo.Types.ObjectId(),
         name: req.body.tnameitle,
         author: req.body.author, // get logged in userid!
+        coordinates:req.body.coordinates.split(',').map(Number),
         date: req.body.date,
         reward: req.body.reward,
         description: req.body.description,
@@ -60,6 +61,7 @@ exports.create_quest = (req, res, next) => {
             created_quest: {
                 _id: result._id,
                 name: result.tnameitle,
+                location: result.location,
                 author: result.author, // get logged in userid!
                 date: result.date,
                 reward: result.reward,
