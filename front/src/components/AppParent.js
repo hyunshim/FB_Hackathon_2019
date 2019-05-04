@@ -1,8 +1,10 @@
 import Map from "./Map";
 import QuestViewer from "./QuestViewer";
 import QuestCreator from "./QuestCreator";
-import React from "react";
 import Profile from "../pages/Profile";
+import React, {Component} from 'react';
+
+
 
 class AppParent extends Component {
     state = {
@@ -69,3 +71,5 @@ class AppParent extends Component {
         </div>
     }
 }
+
+export default AppParent
