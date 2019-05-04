@@ -8,7 +8,7 @@ exports.get_all_quests = (req, res, next) => {
         .exec()
         .then(docs => {
             const response = {
-                marks: docs.map(doc => {
+                quests: docs.map(doc => {
                     return {
                         name: doc.name,
                         author: doc.author,
