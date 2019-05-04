@@ -13,7 +13,8 @@ const questSchema = mongo.Schema({
           text: String }
        ], default : null,
     description: String,
-    imgurl: String
+    imgurl: String,
+    icon: String
 });
 
 module.exports = mongo.model('Quest', questSchema);

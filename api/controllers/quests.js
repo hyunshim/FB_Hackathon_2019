@@ -18,6 +18,7 @@ exports.get_all_quests = (req, res, next) => {
                         comments: doc.comments,
                         description: doc.description,
                         imgurl: doc.imgurl,
+                        icon: doc.icon,
                         id: doc._id
                     }
                 })
@@ -50,7 +51,8 @@ exports.create_quest = (req, res, next) => {
         date: req.body.date,
         reward: req.body.reward,
         description: req.body.description,
-        imgurl: req.body.imgurl
+        imgurl: req.body.imgurl,
+        icon: req.body.icon
     });
     mark.save().then(result => {
         res.status(201).json({
@@ -62,7 +64,8 @@ exports.create_quest = (req, res, next) => {
                 date: result.date,
                 reward: result.reward,
                 description: result.description,
-                imgurl: result.imgurl
+                imgurl: result.imgurl,
+                icon: result.icon
             }
         })
     });
