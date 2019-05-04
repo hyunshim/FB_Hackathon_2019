@@ -1,6 +1,6 @@
 const Quest = require('../models/quest');
 const mongo = require('mongoose');
-const selectFields = '_id name author location date reward comments description imgurl';
+const selectFields = '_id name author location date reward comments description imgurl icon';
 
 
 exports.get_all_quests = (req, res, next) => {

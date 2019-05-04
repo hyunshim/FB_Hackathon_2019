@@ -1,13 +1,43 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import World from "wrld.js"
 import Fab from '@material-ui/core/Fab';
-import {MyLocation, RotateLeft, RotateRight, ThreeSixty} from '@material-ui/icons';
+import { MyLocation, RotateLeft, RotateRight, ThreeSixty } from '@material-ui/icons';
 import QuestViewerWrapped from "./QuestViewer";
+import { get_all_quests } from '../Utils';
 
 const WrldMarkerController = window.WrldMarkerController;
 
 
 class Map extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            quests: [{
+                "name": "I lost my cat",
+                "author": 123,
+                "location": [37.484116, -122.148244],
+                "date": "2019-05-04T11:03:17.961Z",
+                "reward": "lol",
+                "comments": [{
+                    posted: "2019-06-04T11:03:17.961Z",
+                    author: "John Smith",
+                    text: "Oh no! hope you find him soon!",
+                }, {
+                    posted: "2019-05-16T11:03:17.961Z",
+                    author: "John Smith",
+                    text: "So Cute!",
+                },],
+                "description": "He's a 8 year old chonk, I really miss him, please return him",
+                "imgurl": "https://i.imgur.com/EaY09jQ.jpg",
+                "icon": "vet",
+                "id": "5ccd7175f780892f6b6cf523"
+            }],
+            orientation: 270,
+            markers: {},
+            follow: false,
+
+        }
+    }
 
     static defaultProps = {
         initialPos: [37.484116, -122.148244],
@@ -15,7 +45,7 @@ class Map extends Component {
         quests: [{
             "name": "I lost my cat",
             "author": 123,
-            "location": {"coordinates": [37.484116, -122.148244], "type": "Point"},
+            "location": [37.484116, -122.148244],
             "date": "2019-05-04T11:03:17.961Z",
             "reward": "lol",
             "comments": [{
@@ -38,11 +68,13 @@ class Map extends Component {
         }
     };
 
-    state = {
-        orientation: 270,
-        markers: {},
-        follow: false,
-    };
+
+    get_all_quests() {
+        get_all_quests().then(result => {
+            console.log("que", result.quests)
+            this.setState({ quests: result.quests })
+        })
+    }
 
     conponentWillUnMount = () => {
         if (window.DeviceOrientationEvent) {
@@ -52,6 +84,7 @@ class Map extends Component {
     };
 
     componentDidMount = () => {
+        this.get_all_quests()
         let map = this.state.map;
         let controller = this.state.markerController;
         if (!this.state.map) {
@@ -73,7 +106,9 @@ class Map extends Component {
             map.on("mousedown", this.onMouseDown);
             map.on("mouseup", this.onMouseUp);
         }
-        this.placePointsOfInterest(map, controller);
+        setTimeout(function() {
+            this.placePointsOfInterest(map, controller);
+        }.bind(this), 5000);
         if (window.DeviceOrientationEvent) {
             window.addEventListener("deviceorientation", this.handleRotation, true);
         }
@@ -81,10 +116,10 @@ class Map extends Component {
 
     handleRotation = (event) => {
         if (this.state.follow) {
-            const {alpha, beta, gamma} = event;
+            const { alpha, beta, gamma } = event;
             const heading = parseInt(this.convertToCompassHeading(alpha, beta, gamma));
 
-            console.log({heading, alpha, beta, gamma});
+            console.log({ heading, alpha, beta, gamma });
 
             this.setState({
                 orientation: heading
@@ -106,14 +141,14 @@ class Map extends Component {
 
     onMouseUp = (event) => {
         const mouseUpLoc = event.layerPoint;
-        const {mouseDownLoc, map, mouseDownOverride, lastCreatedMarker, markerController} = this.state;
+        const { mouseDownLoc, map, mouseDownOverride, lastCreatedMarker, markerController } = this.state;
         const mouseMoved = mouseUpLoc.distanceTo(mouseDownLoc) > 3;
         markerController.deselectMarker();
 
         if (!mouseMoved && map && !mouseDownOverride) {
-            const {lat, lng} = event.latlng;
+            const { lat, lng } = event.latlng;
             markerController.removeMarker("Creating");
-            let mark = markerController.addMarker("Creating", [lat, lng], {iconKey: "alert"});
+            let mark = markerController.addMarker("Creating", [lat, lng], { iconKey: "alert" });
             mark.addTo(map);
             this.props.createQuestCallback(lat, lng);
         }
@@ -122,18 +157,17 @@ class Map extends Component {
 
     placePointsOfInterest = (map, controller) => {
         let markers = this.state.markers;
-        let points = this.props.quests;
+        let points = this.state.quests;
 
         for (let index in points) {
             if (points.hasOwnProperty(index)) {
                 let point = points[index];
-                console.log(point);
                 if (markers.hasOwnProperty(point.id)) {
                     markers[point.id].remove()
                 }
-                let [lat, lng] = point.location.coordinates;
-                let mark = controller.addMarker(point.id, [lat, lng], {iconKey: point.icon});
-                let circle = window.L.circle(point.location.coordinates, {
+                let [lat, lng] = point.location;
+                let mark = controller.addMarker(point.id, [lat, lng], { iconKey: point.icon });
+                let circle = window.L.circle(point.location, {
                     color: "red",
                     fillOpacity: 0,
                     radius: 200.0
@@ -216,28 +250,28 @@ class Map extends Component {
 
             <div id="content" style={wrapperStyle}>
                 <Fab style={buttons.center} color="primary" aria-label="Return to Location" onClick={this.resetMapPos}>
-                    <MyLocation/>
+                    <MyLocation />
                 </Fab>
                 {window.DeviceOrientationEvent ?
                     <Fab color="secondary" style={buttons.left}
-                         onClick={() => this.setState({follow: !this.state.follow})}>
-                        <ThreeSixty/>
+                        onClick={() => this.setState({ follow: !this.state.follow })}>
+                        <ThreeSixty />
                     </Fab>
                     :
                     <div>
 
 
                         <Fab color="secondary" style={buttons.left} onClick={() => this.rotate(-1)}>
-                            <RotateLeft/>
+                            <RotateLeft />
                         </Fab>
                         < Fab color="secondary" style={buttons.right} onClick={() => this.rotate(1)}>
-                            <RotateRight/>
+                            <RotateRight />
                         </Fab>
                     </div>
                 }
 
 
-                <div id="map" style={mapStyle}/>
+                <div id="map" style={mapStyle} />
             </div>
         );
     }
