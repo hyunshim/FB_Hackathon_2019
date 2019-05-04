@@ -1,8 +1,5 @@
-import React, { Component } from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { Redirect, Route, Routes, Switch } from '@upgrowth/reactkit/lib/router';
-
-import routes from './routes';
+import React, {Component} from 'react';
+import {BrowserRouter} from 'react-router-dom';
 
 import MapView from './pages/MapView';
 import Profile from './pages/Profile';
@@ -11,16 +8,36 @@ import QuestSide from './pages/QuestSide';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css';
+import Map from "./components/Map";
+import QuestViewer from "./components/QuestViewer";
 
 class App extends Component {
+
+    state = {
+        displayQuest: null
+    };
+
+    displayQuest = (quest) => {
+        this.setState({
+            displayQuest: quest
+        })
+    };
+
+    hideQuest = () => {
+        this.setState({
+            displayQuest:null
+        })
+    };
+
     render() {
-        return(
+        return (
             <div id="main">
                 <BrowserRouter>
-                    <MapView/>
                     <Profile/>
                     {/* <Quests/> */}
                 </BrowserRouter>
+                <Map onDisplayQuest={this.displayQuest}/>
+                <QuestViewer onClose={this.hideQuest} display={this.state.displayQuest}/>
             </div>
         );
     }
