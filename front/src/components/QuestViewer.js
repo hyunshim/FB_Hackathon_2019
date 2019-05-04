@@ -68,6 +68,7 @@ class QuestViewer extends React.Component {
         })
     };
 
+   
     render() {
         let {classes, onClose, display, ...other} = this.props;
         const open = display != null;
@@ -156,9 +157,12 @@ class QuestViewer extends React.Component {
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Share">
+                        <a target="_blank" href="https://i.imgur.com/GlOR6rK.png">
+
                         <IconButton aria-label="Share">
                             <ShareIcon/>
                         </IconButton>
+                        </a>
                     </Tooltip>
                     <Tooltip title="See More">
                         <IconButton
