@@ -39,17 +39,7 @@ exports.get_quest = (req, res, next) => {
         .exec()
         .then(doc => {
             const response = {
-                name: doc.name,
-                author: doc.author,
-                location: doc.location,
-                date: doc.date,
-                reward: doc.reward,
-                comments: doc.comments,
-                description: doc.description,
-                imgurl: doc.imgurl,
-                icon: doc.icon,
-                id: doc._id,
-                status: doc.status
+                quest: doc
             }
             res.status(200).json(response)
         })
