@@ -46,7 +46,7 @@ exports.get_all_quests = (req, res, next) => {
 exports.create_quest = (req, res, next) => {
     const quest = new Quest({
         _id: new mongo.Types.ObjectId(),
-        name: req.body.tnameitle,
+        name: req.body.name,
         author: req.body.author, // get logged in userid!
         coordinates:req.body.coordinates.split(',').map(Number),
         reward: req.body.reward,
@@ -59,7 +59,7 @@ exports.create_quest = (req, res, next) => {
             message: `Created quest of id '${result._id}' successfully`,
             created_quest: {
                 _id: result._id,
-                name: result.tnameitle,
+                name: result.name,
                 coordinates: result.coordinates,
                 author: result.author, // get logged in userid!
                 reward: result.reward,
