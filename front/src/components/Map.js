@@ -18,7 +18,15 @@ class Map extends Component {
             "location": {"coordinates": [37.484116, -122.148244], "type": "Point"},
             "date": "2019-05-04T11:03:17.961Z",
             "reward": "lol",
-            "comments": [],
+            "comments": [{
+                posted: "2019-06-04T11:03:17.961Z",
+                author: "John Smith",
+                text: "Oh no! hope you find him soon!",
+            }, {
+                posted: "2019-05-16T11:03:17.961Z",
+                author: "John Smith",
+                text: "So Cute!",
+            },],
             "description": "He's a 8 year old chonk, I really miss him, please return him",
             "imgurl": "https://i.imgur.com/EaY09jQ.jpg",
             "icon": "vet",

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import Typography from '@material-ui/core/Typography';
@@ -16,11 +15,13 @@ import IconButton from "@material-ui/core/IconButton/IconButton";
 import classnames from 'classnames';
 import {AddAlert} from '@material-ui/icons';
 import TextField from "@material-ui/core/TextField/TextField";
+import AddIcon from '@material-ui/icons/Add';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ShareIcon from '@material-ui/icons/Share';
 import Tooltip from "@material-ui/core/Tooltip/Tooltip";
 import CardHeader from "@material-ui/core/CardHeader/CardHeader";
 import Avatar from "@material-ui/core/Avatar/Avatar";
+import Fab from "@material-ui/core/Fab/Fab";
 
 const titles = [
     "You've found a Quest!",
@@ -46,6 +47,7 @@ const styles = (theme) => {
         textField: {
             marginLeft: theme.spacing.unit,
             marginRight: theme.spacing.unit,
+            display: "flex"
         },
     }
 };
@@ -75,17 +77,7 @@ class QuestViewer extends React.Component {
                 "location": {"coordinates": [37.484116, -122.148244], "type": "Point"},
                 "date": "2019-05-04T11:03:17.961Z",
                 "reward": "lol",
-                "comments": [
-                    {
-                        posted: "2019-06-04T11:03:17.961Z",
-                        author: "John Smith",
-                        text: "Oh no! hope you find him soon!",
-                    }, {
-                        posted: "2019-05-16T11:03:17.961Z",
-                        author: "John Smith",
-                        text: "So Cute!",
-                    },
-                ],
+                "comments": [],
                 "description": "He's a 8 year old chonk, I really miss him, please return him",
                 "imgurl": "https://i.imgur.com/EaY09jQ.jpg",
                 "icon": "vet",
@@ -116,30 +108,43 @@ class QuestViewer extends React.Component {
                     </Typography>
                 </CardContent>
                 <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
-                    { display.comments.map((comment) => {
+                    {display.comments.map((comment) => {
                         return <Card className={classes.card}>
                             <CardHeader
                                 avatar={
                                     <Avatar aria-label="User" className={classes.avatar}>
-                                        {comment.author.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'')}
+                                        {comment.author.split(/\s/).reduce((response, word) => response += word.slice(0, 1), '')}
                                     </Avatar>
                                 }
                                 action={
                                     <IconButton>
                                     </IconButton>
                                 }
+                                title={comment.author}
+                                subheader={comment.posted}
                             />
+                            <CardContent>
+                                <Typography component="p">
+
+                                    {comment.text}
+                                </Typography>
+                            </CardContent>
                         </Card>
                     })}
                     <TextField
                         id="outlined-textarea"
-                        label="Multiline Placeholder"
-                        placeholder="Placeholder"
+                        label="Add Comment"
+                        placeholder={"Comment as " + "John Doe"}
                         multiline
                         className={classes.textField}
                         margin="normal"
                         variant="outlined"
                     />
+                    <Fab color="primary" aria-label="Add" className={classes.textField}>
+                        <AddIcon/>
+                    </Fab>
+
+
                 </Collapse>
                 <CardActions>
                     <Tooltip title="Track this Quest">
