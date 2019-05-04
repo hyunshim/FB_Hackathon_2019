@@ -2,7 +2,6 @@ const Quest = require('../models/quest');
 const mongo = require('mongoose');
 const selectFields = '_id name author location date reward comments description imgurl';
 
-let stream = require('getstream');
 
 exports.get_all_quests = (req, res, next) => {
     Quest.find()
@@ -34,6 +33,7 @@ exports.get_all_quests = (req, res, next) => {
 }
 
 exports.get_quest = (req, res, next) => {
+    const id = req.params.questId
     Quest.findOne({ _id: id })
         .select(selectFields)
         .exec()
@@ -122,15 +122,6 @@ exports.delete_quest = (req, res, next) => {
                 message: `Deleted quest of id '${id}' successfully`
             });
         })
-        .catch(error => {
-            res.status(500).json({ error: error });
-        });
-}
-
-exports.get_token = (req, res, next) => {
-    let client = stream.connect('ut44aevygx9r', 'ep7rznvzrgptdb9ma4aqr9rdv7wut9v8evg3egu6ma85554k37h6tsekmfjzuubw');
-    let userToken = client.createUserToken("user1");
-    res.status(200).json({
-        message: userToken
-    })
+        .catch(error => { res.status(500).json({ error: error }); 
+    });
 }
