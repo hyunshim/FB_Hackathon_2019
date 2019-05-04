@@ -2,24 +2,14 @@ const mongo = require('mongoose');
 
 const questSchema = mongo.Schema({
     _id: mongo.Schema.Types.ObjectId,
-    name: String,
+    name: {type:String, required: true},
     author: String,
-    location: {
-        type: {
-          type: String, // Don't do `{ location: { type: String } }`
-          enum: ['Point'], // 'location.type' must be 'Point'
-          required: true
-        },
-        coordinates: {
-          type: [Number],
-          required: true
-        }
-      },
+    location: [Number, Number],
     date: { type: Date, default: Date.now },
     reward: String,
     comments: [
         { posted: { type: Date, default: Date.now },
-          author: Number,
+          author: String,
           text: String, required: false }
        ],
     description: String,

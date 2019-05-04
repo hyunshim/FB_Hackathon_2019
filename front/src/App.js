@@ -3,6 +3,8 @@ import {BrowserRouter} from 'react-router-dom';
 
 import MapView from './pages/MapView';
 import Profile from './pages/Profile';
+// import Quests from './components/Quests';
+import QuestSide from './pages/QuestSide';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css';
@@ -32,6 +34,7 @@ class App extends Component {
             <div id="main">
                 <BrowserRouter>
                     <Profile/>
+                    {/* <Quests/> */}
                 </BrowserRouter>
                 <Map onDisplayQuest={this.displayQuest}/>
                 <QuestViewer onClose={this.hideQuest} display={this.state.displayQuest}/>

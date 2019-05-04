@@ -2,6 +2,7 @@ const Quest = require('../models/quest');
 const mongo = require('mongoose');
 const selectFields = '_id name author location date reward comments description imgurl';
 
+
 exports.get_all_quests = (req, res, next) => {
     Quest.find()
         .select(selectFields)
@@ -26,32 +27,25 @@ exports.get_all_quests = (req, res, next) => {
             }
             res.status(200).json(response);
         })
-        .catch(error => {res.status(500).json({error: error});
-    });
+        .catch(error => {
+            res.status(500).json({ error: error });
+        });
 }
 
 exports.get_quest = (req, res, next) => {
-    Quest.findOne({_id: id})
+    const id = req.params.questId
+    Quest.findOne({ _id: id })
         .select(selectFields)
         .exec()
         .then(doc => {
             const response = {
-                name: doc.name,
-                author: doc.author,
-                location: doc.location,
-                date: doc.date,
-                reward: doc.reward,
-                comments: doc.comments,
-                description: doc.description,
-                imgurl: doc.imgurl,
-                icon: doc.icon,
-                id: doc._id,
-                status: doc.status
+                quest: doc
             }
             res.status(200).json(response)
         })
-        .catch(error => {res.status(500).json({error: error});
-    })
+        .catch(error => {
+            res.status(500).json({ error: error });
+        })
 }
 
 exports.create_quest = (req, res, next) => {
@@ -59,7 +53,7 @@ exports.create_quest = (req, res, next) => {
         _id: new mongo.Types.ObjectId(),
         name: req.body.name,
         author: req.body.author, // get logged in userid!
-        location:req.body.location,
+        location: req.body.location,
         reward: req.body.reward,
         description: req.body.description,
         imgurl: req.body.imgurl,
@@ -84,9 +78,42 @@ exports.create_quest = (req, res, next) => {
     });
 }
 
+exports.update_quest = (req, res, next) => {
+    const id = req.params.questId;
+    const updateOps = {};
+    for (const ops of Object.entries(req.body)) {
+        updateOps[ops[0]] = ops[1];
+    }
+    Quest.update({_id: id}, {$set: updateOps})
+        .select(selectFields)
+        .exec()
+        .then(result => {
+            res.status(200).json({
+                message: `Updated user of id '${id}' successfully`,
+                updatedQuest: {
+                    _id: result._id,
+                    name: result.name,
+                    author: result.author,
+                    location: result.location,
+                    date: result.date,
+                    reward: result.reward,
+                    comments: result.comments,
+                    description: result.description,
+                    imgurl: result.imgurl,
+                    icon: result.icon,
+                    status: result.status,
+                    requests: 
+                    {
+                        type: 'GET'
+                    }
+                }
+            })
+        })
+}
+
 exports.delete_quest = (req, res, next) => {
     const id = req.params.questId;
-    Quest.findOneAndDelete({_id: id})
+    Quest.findOneAndDelete({ _id: id })
         .select(selectFields)
         .exec()
         .then(result => {
@@ -95,6 +122,6 @@ exports.delete_quest = (req, res, next) => {
                 message: `Deleted quest of id '${id}' successfully`
             });
         })
-        .catch(error => {res.status(500).json({error: error});
+        .catch(error => { res.status(500).json({ error: error }); 
     });
 }

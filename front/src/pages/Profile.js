@@ -5,10 +5,10 @@ import Button from '@material-ui/core/Button';
 import FavouriteIcon from '@material-ui/icons/Favorite';
 
 import avatar from '../images/default-avatar.png'
-import { Container } from 'reactstrap';
+import { Container, Input, Modal } from 'reactstrap';
 import './Profile.css';
-
-import { get_user } from '../Utils'
+import Quests from '../components/Quests';
+import { get_user, create_quest } from '../Utils'
 
 
 class Profile extends React.Component {
@@ -18,8 +18,14 @@ class Profile extends React.Component {
             user_id: "5ccd64118a8994419063f679",
             user: [],
             show: false,
+            toggleCreateQuest: false,
         }
+
+        this.toggleCreateQuest = this.toggleCreateQuest.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
+
+    toggleCreateQuest() { this.setState({ toggleCreateQuest: !this.state.toggleCreateQuest }) }
 
     toggleDrawer = (side, open) => () => {
         this.setState({
@@ -33,21 +39,44 @@ class Profile extends React.Component {
         })
     }
 
+    create_quest() {
+        let data = {
+            name: this.state.name,
+            author: this.state.author,
+            location: [this.state.latitude, this.state.longitude],
+            reward: this.state.reward,
+            description: this.state.description,
+            imgurl: this.state.imgurl,
+            icon: this.state.icon,
+        }
+        create_quest(data).then(result => {
+            console.log("create_quest:", result)
+        })
+        this.toggleCreateQuest()
+
+    }
+
+    handleChange({ target }) {
+        console.log(target.name, target.value)
+        this.setState({ [target.name]: target.value });
+    }
+
+
     componentDidMount() {
-        this.get_user()
+        this.get_user();
     }
 
     render() {
         const profile = (
-            <Container>
-                <div id="center" style={{ width: "230px", marginTop: "20%" }}>
-                    <div><img src={avatar} style={{ borderRadius: "50%", width: "110px", height: "110px" }} /></div>
+            <div style={{overflowY: "hidden"}}>
+                <div id="center" style={{ width: "230px", marginTop: "20px" }}>
+                    <div><img src={avatar} style={{ borderRadius: "50%", width: "100px", height: "100px" }} /></div>
 
                     {//<Button variant="contained" color="primary">asd</Button> -->
                     }
                     {this.state.user.map((user) => {
                         return (
-                            <div id="center">
+                            <div id="center" key={user._id}>
                                 <div id="title">{user.name}</div>
                                 <div>{user.ph}</div>
                                 <div>{user.address}</div>
@@ -55,21 +84,43 @@ class Profile extends React.Component {
                             </div>
                         )
                     })}
-                    <Button style={{ marginTop: "20px", fontSize: "0.7rem" }} variant="contained" color="primary">CREATE QUEST</Button>
-
+                    <Button onClick={() => this.toggleCreateQuest()} style={{ marginTop: "10px", fontSize: "0.7rem" }} variant="contained" color="primary">CREATE QUEST</Button>
+                    <div style={{ marginTop: "15px", width: "100%", height: "360px", overflowY: "scroll" }}><Quests /></div>
                 </div>
-            </Container>
+            </div>
         )
         return (
             <div>
+                <Modal isOpen={this.state.toggleCreateQuest}>
+                    <div style={{ width: "100%", padding: "20px" }}>
+                        <table style={{ width: "100%" }}>
+                            <tbody>
+                                {["name", "author", "latitude", "longitude", "reward", "description", "imgurl", "icon"].map((key) => {
+                                    return (
+                                        <tr>
+                                            <td>
+                                                <Input defaultValue={key} readOnly style={{ textTransform: "capitalize", textAlign: "center", borderRadius: "0px", height: "35px", fontSize: "12px" }} disabled />
+                                            </td>
+                                            <td>
+                                                <Input name={key} onChange={this.handleChange} style={{ backgroundColor: "white", textAlign: "center", borderRadius: "0px", height: "35px", fontSize: "12px" }} />
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+
+                        <div id="center"><Button variant="contained" color="primary" style={{ marginTop: "12px", fontSize: "12px" }} onClick={() => this.create_quest()}>CONFIRM</Button></div>
+                    </div>
+                </Modal>
                 <Button onClick={this.toggleDrawer('left', true)}>
                     <div style={{ paddingLeft: "0px", paddingTop: "3px" }}>
                         <img src={avatar} style={{
-                            border: "1.5px solid black", 
-                            borderRadius: "50%", 
-                            width: "40px", 
-                            height: "40px" 
-                            }} />
+                            border: "1.5px solid black",
+                            borderRadius: "50%",
+                            width: "40px",
+                            height: "40px"
+                        }} />
                     </div>
                 </Button>
                 <Drawer open={this.state.left} onClose={this.toggleDrawer('left', false)}>

@@ -6,7 +6,8 @@ const userSchema = mongo.Schema({
     ph: String,
     address: String,
     experience: Number,
-    quests: Array
+    quests: Array,
+    title: { type: String, default: null }
 });
 
 module.exports = mongo.model('User', userSchema);
