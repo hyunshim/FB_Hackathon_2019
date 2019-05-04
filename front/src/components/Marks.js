@@ -51,6 +51,7 @@ class Marks extends Component {
     // CREATE USER
     toggleAddUser() {
         this.setState({ modal_user: !this.state.modal_user })
+
     }
     addUser(name, ph, address, experience, quests) {
         create_user(name, ph, address, experience, quests).then(result => {
