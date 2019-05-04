@@ -1,21 +1,21 @@
-import React, { Component } from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { Redirect, Route, Routes, Switch } from '@upgrowth/reactkit/lib/router';
-
-import routes from './routes';
+import React, {Component} from 'react';
+import {BrowserRouter} from 'react-router-dom';
 
 import Marks from './components/Marks';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css';
+import Map from "./components/Map";
 
 class App extends Component {
+
     render() {
-        return(
+        return (
             <div id="main">
                 <BrowserRouter>
-                    <Marks />
+                    <Marks/>
                 </BrowserRouter>
+                <Map/>
             </div>
         );
     }
