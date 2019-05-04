@@ -5,7 +5,8 @@ const userSchema = mongo.Schema({
     name: String,
     ph: String,
     address: String,
-    experience: Number
+    experience: Number,
+    quests: Array
 });
 
 module.exports = mongo.model('User', userSchema);
