@@ -10,6 +10,7 @@ exports.create_user = (req, res, next) => {
         address: req.body.address,
         experience: req.body.experience,
         quests: req.body.quests,
+        title: req.body.title
     });
     console.log(req.body)
     console.log(user)
@@ -22,7 +23,7 @@ exports.create_user = (req, res, next) => {
                 ph: result.ph,
                 address: result.address,
                 experience: result.experience,
-                quests: result.quests,
+                quests: result.quests
             }
         })
     });
@@ -57,6 +58,7 @@ exports.get_all_users = (req, res, next) => {
                         address: doc.address,
                         experience: doc.experience,
                         quests: doc.quests,
+                        title: doc.title
                     }
                 })
             }
@@ -65,6 +67,7 @@ exports.get_all_users = (req, res, next) => {
         .catch(error => {res.status(500).json({error: error});
     });
 }
+
 exports.delete_user = (req, res, next) => {
     const id = req.params.userId;
     User.findOneAndDelete({_id: id})
