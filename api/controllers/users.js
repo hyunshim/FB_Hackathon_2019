@@ -68,6 +68,35 @@ exports.get_all_users = (req, res, next) => {
     });
 }
 
+exports.update_user = (req, res, next) => {
+    const id = req.params.userId;
+    const updateOps = {};
+    for (const ops of req.body) {
+        updateOps[ops.propName] = ops.value;
+    }
+    User.update({_id: id}, {$set: updateOps})
+        .select(selectFields)
+        .exec()
+        .then(result => {
+            res.status(200).json({
+                message: `Updated user of id '${id}' successfully`,
+                updatedUser: {
+                    _id: result._id,
+                    name: result.name,
+                    ph: result.ph,
+                    address: result.address,
+                    experience: result.experience,
+                    quests: result.quests,
+                    title: result.title,
+                    requests: {
+                        type: 'GET'
+                    }
+                }
+            })
+        })
+}
+
+
 exports.delete_user = (req, res, next) => {
     const id = req.params.userId;
     User.findOneAndDelete({_id: id})

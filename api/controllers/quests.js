@@ -78,6 +78,39 @@ exports.create_quest = (req, res, next) => {
     });
 }
 
+exports.update_quest = (req, res, next) => {
+    const id = req.params.questId;
+    const updateOps = {};
+    for (const ops of req.body) {
+        updateOps[ops.propName] = ops.value;
+    }
+    Quest.update({_id: id}, {$set: updateOps})
+        .select(selectFields)
+        .exec()
+        .then(result => {
+            res.status(200).json({
+                message: `Updated user of id '${id}' successfully`,
+                updatedQuest: {
+                    _id: result._id,
+                    name: result.name,
+                    author: result.author,
+                    location: result.location,
+                    date: result.date,
+                    reward: result.reward,
+                    comments: result.comments,
+                    description: result.description,
+                    imgurl: result.imgurl,
+                    icon: result.icon,
+                    status: result.status,
+                    requests: 
+                    {
+                        type: 'GET'
+                    }
+                }
+            })
+        })
+}
+
 exports.delete_quest = (req, res, next) => {
     const id = req.params.questId;
     Quest.findOneAndDelete({ _id: id })
