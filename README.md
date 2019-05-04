@@ -8,11 +8,19 @@
 
 # Models
 ## Quest
-- name of quest
-- author of quest
-- location
-- quest post date
-- quest reward
-- comments
-- description
-- image link
+- name of quest: String
+- author of quest: String
+- location: (lat, lng)
+- quest post date: Date
+- quest reward, String ?
+- comments: Array
+- description: String
+- image link: String
+
+
+## User
+- name of user: String
+- phone number: String
+- address: String
+- experience: Int
+- pinned quest: Array
