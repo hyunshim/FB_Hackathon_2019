@@ -81,8 +81,8 @@ exports.create_quest = (req, res, next) => {
 exports.update_quest = (req, res, next) => {
     const id = req.params.questId;
     const updateOps = {};
-    for (const ops of req.body) {
-        updateOps[ops.propName] = ops.value;
+    for (const ops of Object.entries(req.body)) {
+        updateOps[ops[0]] = ops[1];
     }
     Quest.update({_id: id}, {$set: updateOps})
         .select(selectFields)
