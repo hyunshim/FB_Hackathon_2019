@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import World from "wrld.js"
 import Fab from '@material-ui/core/Fab';
 import {MyLocation, RotateLeft, RotateRight, ThreeSixty} from '@material-ui/icons';
+import QuestViewerWrapped from "./QuestViewer";
 
 const WrldMarkerController = window.WrldMarkerController;
 
@@ -11,7 +12,7 @@ class Map extends Component {
     static defaultProps = {
         initialPos: [37.484116, -122.148244],
         defaultZoom: 16,
-        pointsOfInterest: [{
+        quests: [{
             "name": "I lost my cat",
             "author": 123,
             "location": {"coordinates": [37.484116, -122.148244], "type": "Point"},
@@ -19,10 +20,11 @@ class Map extends Component {
             "reward": "lol",
             "comments": [],
             "description": "He's a 8 year old chonk, I really miss him, please return him",
-            "imgurl": "alert",
+            "imgurl": "https://i.imgur.com/EaY09jQ.jpg",
+            "icon": "vet",
             "id": "5ccd7175f780892f6b6cf523"
         }],
-        createPointOfInterestCallback: (lat, long) => {
+        createQuestCallback: (lat, long, promise) => {
         }
     };
 
@@ -31,7 +33,6 @@ class Map extends Component {
         markers: {},
         follow: false,
     };
-
 
     conponentWillUnMount = () => {
         if (window.DeviceOrientationEvent) {
@@ -42,6 +43,7 @@ class Map extends Component {
 
     componentDidMount = () => {
         let map = this.state.map;
+        let controller = this.state.markerController;
         if (!this.state.map) {
             map = World.map("map", process.env.REACT_APP_WRLDJS, {
                 center: this.props.initialPos,
@@ -50,16 +52,18 @@ class Map extends Component {
             });
 
             // Lib included in index.html
-            const placeMarker = new WrldMarkerController(map);
+            controller = new WrldMarkerController(map);
+            console.log(controller);
             this.setState({
                 map: map,
+                markerController: controller
             });
 
             map.precacheWithDetailedResult(this.props.initialPos, 2000);
             map.on("mousedown", this.onMouseDown);
             map.on("mouseup", this.onMouseUp);
         }
-        this.placePointsOfInterest(map);
+        this.placePointsOfInterest(map, controller);
         if (window.DeviceOrientationEvent) {
             window.addEventListener("deviceorientation", this.handleRotation, true);
         }
@@ -85,26 +89,30 @@ class Map extends Component {
 
     onMouseDown = (event) => {
         this.setState({
-            mouseDownLoc: event.layerPoint
+            mouseDownLoc: event.layerPoint,
+            mouseDownOverride: true,
         });
     };
 
     onMouseUp = (event) => {
         const mouseUpLoc = event.layerPoint;
-        const {mouseDownLoc, map} = this.state;
+        const {mouseDownLoc, map, mouseDownOverride, lastCreatedMarker, markerController} = this.state;
         const mouseMoved = mouseUpLoc.distanceTo(mouseDownLoc) > 3;
+        markerController.deselectMarker();
 
-        if (!mouseMoved && map) {
+        if (!mouseMoved && map && !mouseDownOverride) {
             const {lat, lng} = event.latlng;
-            let mark = World.marker([lat, lng], {title: "Test Marker"});
+            markerController.removeMarker("Creating");
+            let mark = markerController.addMarker("Creating", [lat, lng], {iconKey: "alert"});
             mark.addTo(map);
+            this.props.createQuestCallback(lat, lng);
         }
     };
 
 
-    placePointsOfInterest = (map) => {
+    placePointsOfInterest = (map, controller) => {
         let markers = this.state.markers;
-        let points = this.props.pointsOfInterest;
+        let points = this.props.quests;
 
         for (let index in points) {
             if (points.hasOwnProperty(index)) {
@@ -113,13 +121,35 @@ class Map extends Component {
                 if (markers.hasOwnProperty(point.id)) {
                     markers[point.id].remove()
                 }
-                let mark = World.marker(point.location.coordinates, {title: point.name, iconKey: point.icon});
-                mark.addTo(map);
+                let [lat, lng] = point.location.coordinates;
+                let mark = controller.addMarker(point.id, [lat, lng], {iconKey: point.icon});
+                let circle = window.L.circle(point.location.coordinates, {
+                    color: "red",
+                    fillOpacity: 0,
+                    radius: 200.0
+                });
+
                 markers[point.id] = mark;
+                // circle.addTo(map);
+                mark.addTo(map);
+
+                mark.on("click", (event) => {
+                    controller.selectMarker(point.id);
+                    this.setState({
+                        display: point,
+                    })
+                })
             }
         }
         this.setState({
             markers: markers
+        })
+    };
+
+    onDeselectQuest = () =>{
+        this.state.markerController.deselectMarker();
+        this.setState({
+            display: null
         })
     };
 
@@ -132,6 +162,7 @@ class Map extends Component {
         this.state.map.setCameraHeadingDegrees(new_orientation);
 
     };
+
 
     resetMapPos = () => {
 
@@ -180,21 +211,32 @@ class Map extends Component {
             zIndex: "-10"
         };
 
-        const canWatchOrientation = window.DeviceOrientationEvent;
         return (
 
             <div id="content" style={wrapperStyle}>
                 <Fab style={buttons.center} color="primary" aria-label="Return to Location" onClick={this.resetMapPos}>
                     <MyLocation/>
                 </Fab>
-                <div>
-                    <Fab color="secondary" style={buttons.left} onClick={() => this.rotate(-1)}>
-                        <RotateLeft/>
+                {window.DeviceOrientationEvent ?
+                    <Fab color="secondary" style={buttons.left}
+                         onClick={() => this.setState({follow: !this.state.follow})}>
+                        <ThreeSixty/>
                     </Fab>
-                    <Fab color="secondary" style={buttons.right} onClick={() => this.rotate(1)}>
-                        <RotateRight/>
-                    </Fab>
-                </div>
+                    :
+                    <div>
+
+
+                        <Fab color="secondary" style={buttons.left} onClick={() => this.rotate(-1)}>
+                            <RotateLeft/>
+                        </Fab>
+                        < Fab color="secondary" style={buttons.right} onClick={() => this.rotate(1)}>
+                            <RotateRight/>
+                        </Fab>
+                    </div>
+                }
+                <QuestViewerWrapped display={this.state.display} onClose={this.onDeselectQuest}/>
+
+
                 <div id="map" style={mapStyle}/>
             </div>
         );
