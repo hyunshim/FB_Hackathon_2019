@@ -10,11 +10,17 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css';
 import Map from "./components/Map";
 import QuestViewer from "./components/QuestViewer";
+import QuestCreator from "./components/QuestCreator";
 
 class App extends Component {
 
     state = {
-        displayQuest: null
+        displayQuest: null,
+        createQuest: false,
+        createCoordinates: {
+            coordinates: [0, 0],
+            type: "point"
+        }
     };
 
     displayQuest = (quest) => {
@@ -23,9 +29,23 @@ class App extends Component {
         })
     };
 
+    createQuest = (location) => {
+        this.setState({
+            createCoordinates: {
+                coordinates: location,
+                type: "point"
+            }
+        })
+    };
+
     hideQuest = () => {
         this.setState({
-            displayQuest:null
+            displayQuest: null
+        })
+    };
+    hideCreate = () => {
+        this.setState({
+            createQuest: false
         })
     };
 
@@ -36,8 +56,10 @@ class App extends Component {
                     <Profile/>
                     {/* <Quests/> */}
                 </BrowserRouter>
-                <Map onDisplayQuest={this.displayQuest}/>
+                {/*<Map onDisplayQuest={this.displayQuest}/>*/}
                 <QuestViewer onClose={this.hideQuest} display={this.state.displayQuest}/>
+                <QuestCreator onClose={this.hideCreate} open={this.state.createQuest}
+                              location={this.state.coordinates}/>
             </div>
         );
     }

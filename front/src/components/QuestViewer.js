@@ -36,7 +36,8 @@ const styles = (theme) => {
             color: blue[600],
         },
         card: {
-            maxWidth: 345,
+            width: "100%",
+            overflowY: "auto"
         },
         media: {
             objectFit: 'cover',
@@ -90,6 +91,7 @@ class QuestViewer extends React.Component {
             <DialogTitle id="simple-dialog-title">{title}</DialogTitle>
             <Card className={classes.card}>
                 <CardActionArea>
+                    {display.imgurl &&
                     <CardMedia
                         component="img"
                         alt="The Pet we seek!"
@@ -98,6 +100,7 @@ class QuestViewer extends React.Component {
                         image={display.imgurl}
                         title="The animal we would have you seek"
                     />
+                    }
                 </CardActionArea>
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">

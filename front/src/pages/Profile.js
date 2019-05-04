@@ -88,31 +88,9 @@ class Profile extends React.Component {
                     <div style={{ marginTop: "15px", width: "100%", height: "360px", overflowY: "scroll" }}><Quests /></div>
                 </div>
             </div>
-        )
+        );
         return (
             <div>
-                <Modal isOpen={this.state.toggleCreateQuest}>
-                    <div style={{ width: "100%", padding: "20px" }}>
-                        <table style={{ width: "100%" }}>
-                            <tbody>
-                                {["name", "author", "latitude", "longitude", "reward", "description", "imgurl", "icon"].map((key) => {
-                                    return (
-                                        <tr>
-                                            <td>
-                                                <Input defaultValue={key} readOnly style={{ textTransform: "capitalize", textAlign: "center", borderRadius: "0px", height: "35px", fontSize: "12px" }} disabled />
-                                            </td>
-                                            <td>
-                                                <Input name={key} onChange={this.handleChange} style={{ backgroundColor: "white", textAlign: "center", borderRadius: "0px", height: "35px", fontSize: "12px" }} />
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
-                            </tbody>
-                        </table>
-
-                        <div id="center"><Button variant="contained" color="primary" style={{ marginTop: "12px", fontSize: "12px" }} onClick={() => this.create_quest()}>CONFIRM</Button></div>
-                    </div>
-                </Modal>
                 <Button onClick={this.toggleDrawer('left', true)}>
                     <div style={{ paddingLeft: "0px", paddingTop: "3px" }}>
                         <img src={avatar} style={{
