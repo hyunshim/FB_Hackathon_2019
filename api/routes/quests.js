@@ -6,7 +6,9 @@ const Quest = require('../models/quest');
 const QuestsController = require('../controllers/quests');
 
 router.get('/', QuestsController.get_all_quests);
+router.delete('/:questId', UsersController.get_quest);
 router.delete('/:questId', QuestsController.delete_quest);
 router.post('/', QuestsController.create_quest);
+router.post('/updateQuest:questId', QuestsController.update_quest)
 
 module.exports = router;
