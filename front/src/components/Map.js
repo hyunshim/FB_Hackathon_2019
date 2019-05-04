@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import World from "wrld.js"
 import Fab from '@material-ui/core/Fab';
-import { MyLocation, RotateLeft, RotateRight, ThreeSixty } from '@material-ui/icons';
+import { MyLocation, RotateLeft, RotateRight, ThreeSixty, AccessibilityNew } from '@material-ui/icons';
 import QuestViewerWrapped from "./QuestViewer";
 import { get_all_quests } from '../Utils';
 
@@ -67,6 +67,8 @@ class Map extends Component {
         onDisplayQuest: (point) => {
         }
     };
+
+
 
 
     get_all_quests() {
@@ -158,7 +160,7 @@ class Map extends Component {
     placePointsOfInterest = (map, controller) => {
         let markers = this.state.markers;
         let points = this.state.quests;
-
+        controller.addMarker("11111", this.props.initialPos, { iconKey: "aroundme" })
         for (let index in points) {
             if (points.hasOwnProperty(index)) {
                 let point = points[index];
@@ -207,6 +209,14 @@ class Map extends Component {
             durationSeconds: 0.5
         });
     };
+
+    testCall(lat, lng) {
+        this.state.map.setView([lat, lng], this.props.defaultZoom, {
+            // headingDegrees: this.state.orientation,
+            animate: true,
+            durationSeconds: 0.5
+        });
+    }
 
     render() {
         const mapStyle = {
