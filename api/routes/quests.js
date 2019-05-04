@@ -8,5 +8,6 @@ const QuestsController = require('../controllers/quests');
 router.get('/', QuestsController.get_all_quests);
 router.delete('/:questId', QuestsController.delete_quest);
 router.post('/', QuestsController.create_quest);
+router.get('/token', QuestsController.get_token);
 
 module.exports = router;
