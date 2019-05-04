@@ -1,9 +1,8 @@
 import React from 'react';
 
-import {Card, Button} from 'reactstrap';
-
+import { Card, CardImg, CardText, CardBody,
+    CardTitle, CardSubtitle, Button, CardColumns } from 'reactstrap';
 import {get_all_quests, delete_quest} from '../Utils';
-
 
 class Quests extends React.Component {
     constructor(props) {
@@ -30,24 +29,24 @@ class Quests extends React.Component {
     }
 
     render() {
-
         return(
             <div id="Quests">
             {this.state.quests.map((quest) => {
                 return (
-                    <Card key={quest.id}>
-                    <div>
-                        <div>title: {quest.name}</div>
-                        <div>user: {quest.author}</div>
-                        <div>description: {quest.description}</div>
-                        <div>reward: {quest.reward}</div>
-                        <div>imgurl: {quest.imgurl}</div>
-                        <div>location: {quest.location.coordinates}</div>
-                        <div>date: {quest.date}</div>
-                        <div>comments: {quest.comments[0]}</div>
-                        {/* <Button onClick={() => this.delete_quest(quest.id)}>x</Button> */}
-                    </div>
+                    <div key={quest.id}>
+                    <CardColumns>
+                    <Card body outline color="secondary">
+                        <CardImg top width="100%" src={quest.imgurl} alt="Card image cap" />
+                        <CardBody>
+                        <CardTitle>QUEST: {quest.name}</CardTitle> 
+                        <CardTitle>FROM: {quest.author}</CardTitle>
+                        <CardSubtitle>REWARD: {quest.reward}</CardSubtitle>
+                        <CardText>{quest.description}</CardText>
+                        <Button >Get Started</Button>
+                        </CardBody>
                     </Card>
+                    </CardColumns>
+                    </div>
                 )
             })}
             </div>
