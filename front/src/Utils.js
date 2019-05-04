@@ -35,8 +35,6 @@ const delete_user = (_id) => axios.delete(`api/users/${_id}`);
 const get_all_quests = () => axios.get(`api/quests`);
 const delete_quest = (_id) => axios.delete(`api/quests/${_id}`);
 
-
-
 export {
     add_mark,
     get_all_marks,

@@ -4,6 +4,7 @@ import {Card, Button} from 'reactstrap';
 
 import {get_all_quests, delete_quest} from '../Utils';
 
+
 class Quests extends React.Component {
     constructor(props) {
         super(props);
@@ -29,12 +30,13 @@ class Quests extends React.Component {
     }
 
     render() {
+
         return(
             <div id="Quests">
             {this.state.quests.map((quest) => {
                 return (
-                    <Card>
-                    <div key={quest.id}>
+                    <Card key={quest.id}>
+                    <div>
                         <div>title: {quest.name}</div>
                         <div>user: {quest.author}</div>
                         <div>description: {quest.description}</div>
