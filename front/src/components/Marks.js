@@ -54,6 +54,7 @@ class Marks extends Component {
                 this.reloadSwitch()
             })
     }
+    
     get_marks() {
         get_all_marks().then(result => { this.setState({marks: result.marks});})
     }

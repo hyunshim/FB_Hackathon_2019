@@ -5,7 +5,7 @@ const markSchema = mongo.Schema({
     name: String,
     ph: String,
     address: String,
-    points: Number
+    experience: Number
 });
 
 module.exports = mongo.model('User', markSchema);
