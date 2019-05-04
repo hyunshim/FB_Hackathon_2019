@@ -1,5 +1,5 @@
 import axios from 'axios';
-axios.defaults.baseURL = process.env.baseURL || "http://localhost:3000/"
+axios.defaults.baseURL = process.env.baseURL || "http://localhost:3333/"
 axios.interceptors.response.use((response) => response.data);
 
 const get_all_marks = () => axios.get(`api/marks`);
