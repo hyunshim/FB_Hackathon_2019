@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^3.9.3",
     "@upgrowth/reactkit": "^1.0.7",
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",

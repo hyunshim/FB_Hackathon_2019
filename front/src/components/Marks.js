@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import { 
+import {
     Button,
-    Container, 
+    Container,
     Table,
     Modal,
     Input
 } from 'reactstrap';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
-import { add_mark, get_all_marks, delete_mark } from '../Utils';
+import { add_mark, get_all_marks, delete_user, create_user, get_all_users } from '../Utils';
 
 class Marks extends Component {
     constructor(props) {
@@ -16,31 +15,25 @@ class Marks extends Component {
         this.state = {
             marks: [],
             modal: false,
-            title: null,
-            mark: null,
+
+            users: [],
+            name: "",
+            ph: null,
+            address: "",
         }
 
         this.addAssignment = this.addAssignment.bind(this);
-        this.get_marks = this.get_marks.bind(this);
         this.reloadSwitch = this.reloadSwitch.bind(this);
         this.toggleAddAssignment = this.toggleAddAssignment.bind(this);
-        this.onChangeTitle = this.onChangeTitle.bind(this);
-        this.onChangeMark = this.onChangeMark.bind(this);
+        
+        this.get_all_users = this.get_all_users.bind(this);
+        this.onChangeName = this.onChangeName.bind(this);
+        this.onChangePh = this.onChangePh.bind(this);
+        this.onChangeAddress = this.onChangeAddress.bind(this);
     }
 
     reloadSwitch() {
-        this.get_marks()
-    }
-
-    onChangeTitle(event) {
-        this.setState({
-            title: event.target.value.toLowerCase()
-        });
-    }
-    onChangeMark(event) {
-        this.setState({
-            mark: event.target.value
-        });
+        this.get_all_users()
     }
 
     toggleAddAssignment() {
@@ -50,84 +43,107 @@ class Marks extends Component {
 
     addAssignment(name, grade) {
         add_mark(name, grade, Math.random() * (+100 - +49) + +49).then(result => {
-                this.toggleAddAssignment()
-                this.reloadSwitch()
-            })
+            this.toggleAddAssignment()
+            this.reloadSwitch()
+        })
     }
-    get_marks() {
-        get_all_marks().then(result => { this.setState({marks: result.marks});})
+
+    // CREATE USER
+    toggleAddUser() {
+        this.setState({ modal_user: !this.state.modal_user })
     }
-    
-    delete_mark(_id) {
-        delete_mark(_id).then(result => {this.reloadSwitch()})   
+    addUser(name, ph, address, experience, quests) {
+        create_user(name, ph, address, experience, quests).then(result => {
+            this.toggleAddUser()
+            this.reloadSwitch()
+        })
     }
-    
+    onChangeName(event) { this.setState({ name: event.target.value }); }
+    onChangePh(event) { this.setState({ ph: event.target.value }); }
+    onChangeAddress(event) { this.setState({ address: event.target.value }); }
+
+
+    get_all_users() {
+        get_all_users().then(result => { this.setState({ users: result.users }); })
+    }
+
+    delete_user(_id) {
+        delete_user(_id).then(result => { this.reloadSwitch() })
+    }
+
     componentDidMount() {
-        this.get_marks()
+        this.get_all_users()
     }
-    
+
     render() {
-        return(
+        return (
             <Container>
-                <Modal isOpen={this.state.modal} toggle={this.toggleAddAssignment}>
-                    <div style={{width: "100%", padding: "20px"}}>
-                        <table style={{width: "100%"}}>
+                <Modal isOpen={this.state.modal_user} toggle={this.toggleAddUser}>
+                    <div style={{ width: "100%", padding: "20px" }}>
+                        <table style={{ width: "100%" }}>
                             <tbody>
                                 <tr>
                                     <td>
-                                        <Input defaultValue="Title" readOnly style={{ textAlign: "center", borderRadius: "0px", height: "35px", fontSize: "12px" }} disabled />
+                                        <Input defaultValue="name" readOnly style={{ textAlign: "center", borderRadius: "0px", height: "35px", fontSize: "12px" }} disabled />
                                     </td>
                                     <td>
-                                        <Input onChange={this.onChangeTitle} style={{ backgroundColor: "white", textAlign: "center", borderRadius: "0px", height: "35px", fontSize: "12px" }} />
+                                        <Input onChange={this.onChangeName} style={{ backgroundColor: "white", textAlign: "center", borderRadius: "0px", height: "35px", fontSize: "12px" }} />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <Input defaultValue="Mark" readOnly style={{ textAlign: "center", borderRadius: "0px", height: "35px", fontSize: "12px" }} disabled />
+                                        <Input defaultValue="ph" readOnly style={{ textAlign: "center", borderRadius: "0px", height: "35px", fontSize: "12px" }} disabled />
                                     </td>
                                     <td>
-                                        <Input onChange={this.onChangeMark} style={{ backgroundColor: "white", textAlign: "center", borderRadius: "0px", height: "35px", fontSize: "12px" }} />
+                                        <Input onChange={this.onChangePh} style={{ backgroundColor: "white", textAlign: "center", borderRadius: "0px", height: "35px", fontSize: "12px" }} />
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>
+                                        <Input defaultValue="address" readOnly style={{ textAlign: "center", borderRadius: "0px", height: "35px", fontSize: "12px" }} disabled />
+                                    </td>
+                                    <td>
+                                        <Input onChange={this.onChangeAddress} style={{ backgroundColor: "white", textAlign: "center", borderRadius: "0px", height: "35px", fontSize: "12px" }} />
+                                    </td>
+                                </tr>
+
                             </tbody>
                         </table>
-                        <Button color="dark" style={{fontSize: "12px"}} onClick={() => this.addAssignment(this.state.title, this.state.mark)}>ADD</Button>
+                        <Button color="danger" style={{ fontSize: "12px" }} onClick={() => this.addUser(this.state.name, this.state.ph, this.state.address)}>ADD</Button>
                     </div>
                 </Modal>
-                <TransitionGroup className="marks-list">
-                    <Table hover style={{width: "100%"}}>
-                        <thead>
-                            <tr>
-                                <th> Assignment </th>
-                                <th> Mark </th>
-                                <th style={{width: "150px"}}> 
-                                    <Button color="dark" onClick={() => this.toggleAddAssignment()}>
-                                        ADD MARK
+                <table style={{ width: "100%" }}>
+                    <thead>
+                        <tr>
+                            <th> Name </th>
+                            <th> Phone Number </th>
+                            <th> Address </th>
+                            <th> Experience </th>
+                            <th> Quests </th>
+                            <th style={{ width: "150px" }}>
+                                <Button color="dark" onClick={() => this.toggleAddUser()}>
+                                    CREATE USER
                                     </Button>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {this.state.marks.map((assignment) => {
-                                return(     
-                                    <CSSTransition key={assignment.id} timeout={500} classNames="fade">
-                                        <tr>                                            
-                                            <th> {assignment.title} </th>
-                                            <th> {assignment.score} </th>
-                                            <th> 
-                                                <Button
-                                                    variant="danger" onClick={() => this.delete_mark(assignment.id)}
-                                                >
-                                                    &times;
-                                                </Button>
-                                            </th>
-                                        </tr>   
-                                    </CSSTransition>
-                                );
-                            })}
-                        </tbody>
-                    </Table>
-                </TransitionGroup>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.state.users.map((user) => {
+                            return (
+                                <tr>
+                                    <th> {user.name} </th>
+                                    <th> {user.ph} </th>
+                                    <th> {user.address} </th>
+                                    <th> {user.experience} </th>
+                                    <th> {user.quests} </th>
+                                    <th>
+                                        <Button color="danger" onClick={() => this.delete_user(user._id)}>x</Button>
+                                    </th>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
             </Container>
         );
     }
