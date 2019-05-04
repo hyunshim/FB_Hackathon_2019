@@ -25,7 +25,7 @@ const questSchema = mongo.Schema({
     description: String,
     imgurl: String,
     icon: String,
-    solved: Boolean
+    status: { type: Boolean, default: false }
 });
 
 module.exports = mongo.model('Quest', questSchema);

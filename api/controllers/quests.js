@@ -19,7 +19,8 @@ exports.get_all_quests = (req, res, next) => {
                         description: doc.description,
                         imgurl: doc.imgurl,
                         icon: doc.icon,
-                        id: doc._id
+                        id: doc._id,
+                        status: doc.status
                     }
                 })
             }
@@ -44,7 +45,8 @@ exports.get_quest = (req, res, next) => {
                 description: doc.description,
                 imgurl: doc.imgurl,
                 icon: doc.icon,
-                id: doc._id
+                id: doc._id,
+                status: doc.status
             }
             res.status(200).json(response)
         })
@@ -61,7 +63,8 @@ exports.create_quest = (req, res, next) => {
         reward: req.body.reward,
         description: req.body.description,
         imgurl: req.body.imgurl,
-        icon: req.body.icon
+        icon: req.body.icon,
+        status: req.body.status
     });
     quest.save().then(result => {
         res.status(201).json({
@@ -74,7 +77,8 @@ exports.create_quest = (req, res, next) => {
                 reward: result.reward,
                 description: result.description,
                 imgurl: result.imgurl,
-                icon: result.icon
+                icon: result.icon,
+                status: result.status
             }
         })
     });
