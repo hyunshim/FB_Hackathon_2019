@@ -69,10 +69,7 @@ class QuestCreator extends React.Component {
     };
 
     static defaultProps = {
-        location: {
-            coordinates: [0, 0],
-            type: "point"
-        }
+        location: [0, 0]
     };
 
     state = {
@@ -92,12 +89,13 @@ class QuestCreator extends React.Component {
         let data = {
             name: this.state.name,
             author: this.props.author,
-            location: this.props.location.coordinates,
+            location: this.props.location,
             reward: this.state.reward,
             description: this.state.description,
             imgurl: this.state.imgurl,
             icon: this.state.icon,
         };
+        console.log(data);
         create_quest(data).then(result => {
             console.log("create_quest:", result);
 
@@ -110,8 +108,8 @@ class QuestCreator extends React.Component {
     };
 
     handleChange = (key) => {
-        return (event, value) => {
-            this.setState({[key]: value});
+        return (event) => {
+            this.setState({[key]: event.target.value});
         }
     };
 

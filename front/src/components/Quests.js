@@ -62,7 +62,7 @@ class Quests extends React.Component {
                         <div>location: {quest.location.coordinates}</div>
                         <div>date: {quest.date}</div>
                         <div>comments: {quest.comments[0]}</div> */}
-                                {/* <Button onClick={() => this.delete_quest(quest.id)}>x</Button> */}
+                                <Button onClick={() => this.delete_quest(quest.id)}>x</Button>
                             </div>
                         </Card>
                     )
