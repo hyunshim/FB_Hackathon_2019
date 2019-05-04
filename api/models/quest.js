@@ -3,7 +3,7 @@ const mongo = require('mongoose');
 const questSchema = mongo.Schema({
     _id: mongo.Schema.Types.ObjectId,
     name: String,
-    author: Number,
+    author: String,
     location: {
         type: {
           type: String, // Don't do `{ location: { type: String } }`
