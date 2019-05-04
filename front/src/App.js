@@ -6,7 +6,7 @@ import routes from './routes';
 
 import Marks from './components/Marks';
 import Quests from './components/Quests';
-// import QuestBoard from './components/QuestBoard';
+import QuestBoard from './components/QuestBoard';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css';
@@ -18,7 +18,7 @@ class App extends Component {
                 <BrowserRouter>
                     {/* <Marks /> */}
                     <Quests />
-                    {/* <QuestBoard /> */}
+                    <QuestBoard />
                 </BrowserRouter>
             </div>
         );

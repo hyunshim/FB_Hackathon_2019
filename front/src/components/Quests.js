@@ -12,8 +12,6 @@ class Quests extends Component {
         // this.get_all_quests = this.get_all_quests.bind(this);
     }
 
-
-
     get_all_quests() {
         console.log("In get_all_quests")
         get_all_quests().then(result => {

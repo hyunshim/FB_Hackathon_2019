@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 app.use('/api/marks', marks_routes);
 app.use('/api/users', users_routes);
 app.use('/api/quests', quests_routes);
-
+ 
 // Error Handling
 app.use((req, res, next) => {
     const error = new Error("Not Found");
