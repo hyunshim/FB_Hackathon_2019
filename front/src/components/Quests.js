@@ -11,6 +11,7 @@ class Quests extends React.Component {
         super(props);
         this.state = {
             quests: [],
+            distance: 0
         }
     }
 
@@ -30,6 +31,20 @@ class Quests extends React.Component {
         this.get_all_quests();
     }
 
+    distance(lat1, lon1, lat2, lon2, unit) {
+        let radlat1 = Math.PI * lat1/180
+        let radlat2 = Math.PI * lat2/180
+        let theta = lon1-lon2
+        let radtheta = Math.PI * theta/180
+        let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+        dist = Math.acos(dist)
+        dist = dist * 180/Math.PI
+        dist = dist * 60 * 1.1515
+        if (unit=="K") { dist = dist * 1.609344 }
+        if (unit=="M") { dist = dist * 0.8684 }
+        return dist.toFixed(2)
+    }
+
     render() {
         return (
             <div id="Quests">
@@ -38,7 +53,7 @@ class Quests extends React.Component {
                         <Card key={quest.id}>
                             <div style={{ padding: "5px" }}>
                                 <div style={{ fontSize: "1.1rem" }}><b>{quest.name}</b></div>
-                                <div>5 Km away</div>
+                                <div>{this.distance(37.484116,-122.148244,quest.location[0],quest.location[1])}km away</div>
                                 {/* <div>title: {quest.name}</div>
                         <div>user: {quest.author}</div>
                         <div>description: {quest.description}</div>
