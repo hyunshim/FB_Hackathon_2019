@@ -4,7 +4,8 @@ import { Redirect, Route, Routes, Switch } from '@upgrowth/reactkit/lib/router';
 
 import routes from './routes';
 
-import Marks from './components/Marks';
+import MapView from './pages/MapView';
+import Profile from './pages/Profile';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css';
@@ -14,7 +15,8 @@ class App extends Component {
         return(
             <div id="main">
                 <BrowserRouter>
-                    <Marks />
+                    <MapView/>
+                    <Profile/>
                 </BrowserRouter>
             </div>
         );
