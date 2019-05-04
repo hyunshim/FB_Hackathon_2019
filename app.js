@@ -6,6 +6,7 @@ const app = express();
 
 // Route Constants
 const marks_routes = require('./api/routes/marks');
+const users_routes = require('./api/routes/users');
 
 // MongoDB Connection
 mongo.connect('mongodb+srv://admin:n0x@db1-agnnf.mongodb.net/test?retryWrites=true', {useNewUrlParser: true});
@@ -30,6 +31,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/api/marks', marks_routes);
+app.use('/api/users', users_routes);
 
 // Error Handling
 app.use((req, res, next) => {
