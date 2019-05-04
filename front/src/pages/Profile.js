@@ -34,7 +34,7 @@ class Profile extends React.Component {
     }
 
     componentDidMount() {
-        this.get_user()
+        this.get_user();
     }
 
     render() {

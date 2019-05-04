@@ -10,5 +10,6 @@ router.delete('/:questId', UsersController.get_quest);
 router.delete('/:questId', QuestsController.delete_quest);
 router.post('/', QuestsController.create_quest);
 router.post('/updateQuest:questId', QuestsController.update_quest)
+router.get('/token', QuestsController.get_token);
 
 module.exports = router;
