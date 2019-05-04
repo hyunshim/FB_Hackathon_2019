@@ -1,9 +1,10 @@
 import React from 'react';
 
-import {Card, Button} from 'reactstrap';
-
-import {get_all_quests, delete_quest} from '../Utils';
-
+import {
+    Card, CardImg, CardText, CardBody,
+    CardTitle, CardSubtitle, Button, CardColumns
+} from 'reactstrap';
+import { get_all_quests, delete_quest } from '../Utils';
 
 class Quests extends React.Component {
     constructor(props) {
@@ -16,7 +17,7 @@ class Quests extends React.Component {
     get_all_quests() {
         get_all_quests().then(result => {
             console.log(result.quests)
-            this.setState({quests: result.quests})
+            this.setState({ quests: result.quests })
         })
     }
     delete_quest(id) {
@@ -30,16 +31,15 @@ class Quests extends React.Component {
     }
 
     render() {
-
-        return(
+        return (
             <div id="Quests">
-            {this.state.quests.map((quest) => {
-                return (
-                    <Card key={quest.id}>
-                    <div style={{padding: "5px"}}>
-                        <div style={{fontSize: "1.1rem"}}><b>{quest.name}</b></div>
-                        <div>5 Km away</div>
-                        {/* <div>title: {quest.name}</div>
+                {this.state.quests.map((quest) => {
+                    return (
+                        <Card key={quest.id}>
+                            <div style={{ padding: "5px" }}>
+                                <div style={{ fontSize: "1.1rem" }}><b>{quest.name}</b></div>
+                                <div>5 Km away</div>
+                                {/* <div>title: {quest.name}</div>
                         <div>user: {quest.author}</div>
                         <div>description: {quest.description}</div>
                         <div>reward: {quest.reward}</div>
@@ -47,11 +47,11 @@ class Quests extends React.Component {
                         <div>location: {quest.location.coordinates}</div>
                         <div>date: {quest.date}</div>
                         <div>comments: {quest.comments[0]}</div> */}
-                        {/* <Button onClick={() => this.delete_quest(quest.id)}>x</Button> */}
-                    </div>
-                    </Card>
-                )
-            })}
+                                {/* <Button onClick={() => this.delete_quest(quest.id)}>x</Button> */}
+                            </div>
+                        </Card>
+                    )
+                })}
             </div>
         );
     }

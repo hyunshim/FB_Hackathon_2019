@@ -6,7 +6,8 @@ import routes from './routes';
 
 import MapView from './pages/MapView';
 import Profile from './pages/Profile';
-import Quests from './components/Quests';
+// import Quests from './components/Quests';
+import QuestSide from './pages/QuestSide';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css';
