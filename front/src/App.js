@@ -20,7 +20,8 @@ class App extends Component {
         createCoordinates: {
             coordinates: [0, 0],
             type: "point"
-        }
+        },
+        isSelectingCoord: false
     };
 
     displayQuest = (quest) => {
@@ -30,11 +31,23 @@ class App extends Component {
     };
 
     createQuest = (location) => {
+        console.log("Begin Create Quest");
+        if (!location) {
+            console.log("Select Location");
+
+            this.setState({
+                isSelectingCoord: true
+            });
+            return
+        }
+        console.log("Create Quest");
+
         this.setState({
             createCoordinates: {
                 coordinates: location,
                 type: "point"
-            }
+            },
+            createQuest:true,
         })
     };
 
@@ -45,7 +58,12 @@ class App extends Component {
     };
     hideCreate = () => {
         this.setState({
-            createQuest: false
+            createQuest: false,
+            isSelectingCoord: false,
+            createCoordinates: {
+                coordinates: [0, 0],
+                type: "point"
+            },
         })
     };
 
@@ -53,10 +71,10 @@ class App extends Component {
         return (
             <div id="main">
                 <BrowserRouter>
-                    <Profile/>
+                    <Profile createQuestCallback={this.createQuest}/>
                     {/* <Quests/> */}
                 </BrowserRouter>
-                {/*<Map onDisplayQuest={this.displayQuest}/>*/}
+                <Map onDisplayQuest={this.displayQuest} selectCoords={this.state.isSelectingCoord} createQuestCallback={this.createQuest} cancelCreateQuest={this.hideCreate}/>
                 <QuestViewer onClose={this.hideQuest} display={this.state.displayQuest}/>
                 <QuestCreator onClose={this.hideCreate} open={this.state.createQuest}
                               location={this.state.coordinates}/>

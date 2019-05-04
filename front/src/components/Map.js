@@ -3,8 +3,17 @@ import World from "wrld.js"
 import Fab from '@material-ui/core/Fab';
 import {MyLocation, RotateLeft, RotateRight, ThreeSixty} from '@material-ui/icons';
 import QuestViewerWrapped from "./QuestViewer";
+import withStyles from "@material-ui/core/es/styles/withStyles";
+import Snackbar from "@material-ui/core/Snackbar/Snackbar";
+import IconButton from "@material-ui/core/IconButton/IconButton";
+import CloseIcon from "@material-ui/core/SvgIcon/SvgIcon";
 
 const WrldMarkerController = window.WrldMarkerController;
+const styles = theme => ({
+    close: {
+        padding: theme.spacing.unit / 2,
+    },
+});
 
 
 class Map extends Component {
@@ -32,8 +41,6 @@ class Map extends Component {
             "icon": "vet",
             "id": "5ccd7175f780892f6b6cf523"
         }],
-        createQuestCallback: (lat, long, promise) => {
-        },
         onDisplayQuest: (point) => {
         }
     };
@@ -106,16 +113,15 @@ class Map extends Component {
 
     onMouseUp = (event) => {
         const mouseUpLoc = event.layerPoint;
-        const {mouseDownLoc, map, mouseDownOverride, lastCreatedMarker, markerController} = this.state;
+        const {mouseDownLoc, map, markerController} = this.state;
+        const {selectCoords} = this.props;
         const mouseMoved = mouseUpLoc.distanceTo(mouseDownLoc) > 3;
         markerController.deselectMarker();
-
-        if (!mouseMoved && map && !mouseDownOverride) {
+        console.log("Mouse Up");
+        if (!mouseMoved && map && selectCoords) {
             const {lat, lng} = event.latlng;
-            markerController.removeMarker("Creating");
-            let mark = markerController.addMarker("Creating", [lat, lng], {iconKey: "alert"});
-            mark.addTo(map);
-            this.props.createQuestCallback(lat, lng);
+            console.log(`Selecting ${lat},${lng}`);
+            this.props.createQuestCallback([lat, lng]);
         }
     };
 
@@ -212,6 +218,8 @@ class Map extends Component {
             zIndex: "-10"
         };
 
+        const {selectCoords, classes} = this.props;
+
         return (
 
             <div id="content" style={wrapperStyle}>
@@ -236,7 +244,28 @@ class Map extends Component {
                     </div>
                 }
 
-
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={this.props.selectCoords}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">Where did you lose the pet?</span>}
+                    action={[
+                        <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            className={classes.close}
+                            onClick={this.props.cancelCreateQuest}
+                        >
+                            <CloseIcon/>
+                        </IconButton>,
+                    ]}
+                />
                 <div id="map" style={mapStyle}/>
             </div>
         );
@@ -281,4 +310,4 @@ class Map extends Component {
     }
 }
 
-export default Map;
+export default withStyles(styles)(Map);

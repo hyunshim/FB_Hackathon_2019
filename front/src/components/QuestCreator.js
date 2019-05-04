@@ -20,6 +20,7 @@ import Label from "reactstrap/es/Label";
 import Typography from "@material-ui/core/Typography/Typography";
 import Button from "@material-ui/core/Button/Button";
 import {Notes} from "@material-ui/icons"
+import {create_quest} from "../Utils";
 
 const titles = [
     "What have ya lost Adventurer?",
@@ -47,7 +48,7 @@ const styles = (theme) => {
             margin: theme.spacing.unit,
             display: "flex"
         },
-        margin:{
+        margin: {
             margin: theme.spacing.unit,
         }
 
@@ -82,6 +83,31 @@ class QuestCreator extends React.Component {
         imgurl: "",
         icon: "vet",
         title: titles[Math.floor(Math.random() * titles.length)]
+    };
+
+    create = () => {
+        this.setState({
+            creating: true
+        });
+        let data = {
+            name: this.state.name,
+            author: this.props.author,
+            location: this.props.location.coordinates,
+            reward: this.state.reward,
+            description: this.state.description,
+            imgurl: this.state.imgurl,
+            icon: this.state.icon,
+        };
+        create_quest(data).then(result => {
+            console.log("create_quest:", result);
+
+            this.props.onClose();
+        }).catch(()=>{
+            this.setState({
+                creating: false
+            });
+        });
+        this.toggleCreateQuest()
     };
 
     handleChange = (key) => {
@@ -160,22 +186,22 @@ class QuestCreator extends React.Component {
                     </FormControl>
                     <Label>What's the bounty</Label>
                     <div className={classes.margin}>
-                    <Typography className={classes.pos} color="textSecondary">
-                        {reward}%
-                    </Typography>
+                        <Typography className={classes.pos} color="textSecondary">
+                            {reward}%
+                        </Typography>
 
-                    <Slider
-                        id="reward-slider"
-                        value={this.state.reward}
-                        min={0}
-                        max={200}
-                        step={20}
-                        onChange={this.handleChange("reward")}
-                    />
+                        <Slider
+                            id="reward-slider"
+                            value={this.state.reward}
+                            min={0}
+                            max={200}
+                            step={20}
+                            onChange={this.handleChange("reward")}
+                        />
                     </div>
                 </CardContent>
                 <CardActions>
-                    <Button color={"primary"}><Quill/> Post Quest</Button>
+                    <Button disabled={this.state.creating} color={"primary"} onClick={this.create}><Quill/> Post Quest</Button>
                 </CardActions>
             </Card>
         </Dialog>
