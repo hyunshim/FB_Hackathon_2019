@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import World from "wrld.js"
-import {Button} from 'reactstrap';
+import Fab from '@material-ui/core/Fab';
+import {MyLocation, RotateLeft, RotateRight, ThreeSixty} from '@material-ui/icons';
 
-import 'bootstrap/dist/css/bootstrap.min.css'
+const WrldMarkerController = window.WrldMarkerController;
 
 
 class Map extends Component {
@@ -26,14 +27,15 @@ class Map extends Component {
     };
 
     state = {
-        orientation: 180,
-        markers: {}
+        orientation: 270,
+        markers: {},
+        follow: false,
     };
 
 
     conponentWillUnMount = () => {
         if (window.DeviceOrientationEvent) {
-            // window.removeEventListener("deviceorientation", this.handleRotation, true);
+            window.removeEventListener("deviceorientation", this.handleRotation, true);
         }
 
     };
@@ -46,6 +48,9 @@ class Map extends Component {
                 zoom: this.props.defaultZoom,
                 orientation: this.state.orientation
             });
+
+            // Lib included in index.html
+            const placeMarker = new WrldMarkerController(map);
             this.setState({
                 map: map,
             });
@@ -56,23 +61,24 @@ class Map extends Component {
         }
         this.placePointsOfInterest(map);
         if (window.DeviceOrientationEvent) {
-            // window.addEventListener("deviceorientation", this.handleRotation, true);
+            window.addEventListener("deviceorientation", this.handleRotation, true);
         }
     };
 
-    componentDidUpdate = (prevProps, prevState, snapshot) => {
-    };
-
     handleRotation = (event) => {
-        const alpha = event.alpha;
-        const beta = event.alpha;
+        if (this.state.follow) {
+            const {alpha, beta, gamma} = event;
+            const heading = parseInt(this.convertToCompassHeading(alpha, beta, gamma));
 
-        this.setState({
-            orientation: beta
-        });
+            console.log({heading, alpha, beta, gamma});
 
-        if (this.state.map) {
-            this.state.map.setCameraHeadingDegrees(beta).setCameraTiltDegrees(alpha);
+            this.setState({
+                orientation: heading
+            });
+
+            if (this.state.map) {
+                this.state.map.setCameraHeadingDegrees(heading);
+            }
         }
     };
 
@@ -88,15 +94,10 @@ class Map extends Component {
         const {mouseDownLoc, map} = this.state;
         const mouseMoved = mouseUpLoc.distanceTo(mouseDownLoc) > 3;
 
-        if (!mouseMoved) {
-            const latlng = event.latlng;
-            // latlng["alt"] = 0;
-            console.log(latlng);
-            const marker = World.marker(latlng, {
-                elevation: 0,
-                elevationMode: "heightAboveGround",
-                iconKey: "alert"
-            }).addTo(map);
+        if (!mouseMoved && map) {
+            const {lat, lng} = event.latlng;
+            let mark = World.marker([lat, lng], {title: "Test Marker"});
+            mark.addTo(map);
         }
     };
 
@@ -135,9 +136,9 @@ class Map extends Component {
     resetMapPos = () => {
 
         this.state.map.setView(this.props.initialPos, this.props.defaultZoom, {
-            headingDegrees: this.state.orientation,
+            // headingDegrees: this.state.orientation,
             animate: true,
-            durationSeconds: 2
+            durationSeconds: 0.5
         });
     };
 
@@ -145,50 +146,96 @@ class Map extends Component {
         const mapStyle = {
             width: "100%",
             height: "100%",
-            zIndex: "-100"
         };
 
         const buttons = {
-            rotate: {
+            center: {
                 position: "fixed",
                 bottom: "50px",
                 left: "50px",
+                zIndex: 10,
             },
             left: {
                 position: "fixed",
                 bottom: "50px",
-                right: "100px",
+                right: "50px",
+                zIndex: 10,
+
             },
             right: {
                 position: "fixed",
                 bottom: "50px",
-                right: "50px",
+                right: "150px",
+                zIndex: 10,
+
             },
         };
 
         const wrapperStyle = {
-            // position: "fixed",
+            position: "fixed",
             top: 0,
             left: 0,
-            width: "500px",
-            height: "500px",
-            zIndex: "-100"
+            width: "100%",
+            height: "100%",
+            zIndex: "-10"
         };
 
+        const canWatchOrientation = window.DeviceOrientationEvent;
         return (
 
             <div id="content" style={wrapperStyle}>
-                <Button style={buttons.rotate} onClick={this.resetMapPos}>O</Button>
-                {!window.DeviceOrientationEvent && (
-                    <div>
-                        <Button style={buttons.left} onClick={() => this.rotate(-1)}>L</Button>
-                        <Button style={buttons.right} onClick={() => this.rotate(1)}>R</Button>
-                    </div>
-                )
-                }
+                <Fab style={buttons.center} color="primary" aria-label="Return to Location" onClick={this.resetMapPos}>
+                    <MyLocation/>
+                </Fab>
+                <div>
+                    <Fab color="secondary" style={buttons.left} onClick={() => this.rotate(-1)}>
+                        <RotateLeft/>
+                    </Fab>
+                    <Fab color="secondary" style={buttons.right} onClick={() => this.rotate(1)}>
+                        <RotateRight/>
+                    </Fab>
+                </div>
                 <div id="map" style={mapStyle}/>
             </div>
         );
+    }
+
+    convertToCompassHeading = (alpha, beta, gamma) => {
+        // Convert degrees to radians
+        let alphaRad = alpha * (Math.PI / 180);
+        let betaRad = beta * (Math.PI / 180);
+        let gammaRad = gamma * (Math.PI / 180);
+
+        // Calculate equation components
+        let cA = Math.cos(alphaRad);
+        let sA = Math.sin(alphaRad);
+        let cB = Math.cos(betaRad);
+        let sB = Math.sin(betaRad);
+        let cG = Math.cos(gammaRad);
+        let sG = Math.sin(gammaRad);
+
+        // Calculate A, B, C rotation components
+        let rA = -cA * sG - sA * sB * cG;
+        let rB = -sA * sG + cA * sB * cG;
+        let rC = -cB * cG;
+
+        // Calculate compass heading
+        let compassHeading = Math.atan(rA / rB);
+
+        // Convert from half unit circle to whole unit circle
+        if (rB < 0) {
+            compassHeading += Math.PI;
+        } else if (rA < 0) {
+            compassHeading += 2 * Math.PI;
+        }
+
+        // Convert radians to degrees
+        compassHeading *= 180 / Math.PI;
+        return compassHeading;
+    };
+
+    getRotationDegrees(alpha, beta, gamma) {
+
     }
 }
 

@@ -14,7 +14,6 @@ class App extends Component {
         return (
             <div id="main">
                 <BrowserRouter>
-                    <MapView/>
                     <Profile/>
                 </BrowserRouter>
                 <Map/>
