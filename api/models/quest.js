@@ -9,7 +9,7 @@ const questSchema = mongo.Schema({
     reward: String,
     comments: [
         { posted: { type: Date, default: Date.now },
-          author: Number,
+          author: String,
           text: String, required: false }
        ],
     description: String,
