@@ -1,11 +1,19 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import World from "wrld.js"
 import Fab from '@material-ui/core/Fab';
-import { MyLocation, RotateLeft, RotateRight, ThreeSixty, AccessibilityNew } from '@material-ui/icons';
-import QuestViewerWrapped from "./QuestViewer";
-import { get_all_quests } from '../Utils';
+import {MyLocation, RotateLeft, RotateRight, ThreeSixty} from '@material-ui/icons';
+import withStyles from "@material-ui/core/es/styles/withStyles";
+import Snackbar from "@material-ui/core/Snackbar/Snackbar";
+import IconButton from "@material-ui/core/IconButton/IconButton";
+import CloseIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import {get_all_quests} from '../Utils';
 
 const WrldMarkerController = window.WrldMarkerController;
+const styles = theme => ({
+    close: {
+        padding: theme.spacing.unit / 2,
+    },
+});
 
 
 class Map extends Component {
@@ -62,19 +70,15 @@ class Map extends Component {
             "icon": "vet",
             "id": "5ccd7175f780892f6b6cf523"
         }],
-        createQuestCallback: (lat, long, promise) => {
-        },
         onDisplayQuest: (point) => {
         }
     };
 
 
-
-
     get_all_quests() {
         get_all_quests().then(result => {
             console.log("que", result.quests)
-            this.setState({ quests: result.quests })
+            this.setState({quests: result.quests})
         })
     }
 
@@ -108,7 +112,7 @@ class Map extends Component {
             map.on("mousedown", this.onMouseDown);
             map.on("mouseup", this.onMouseUp);
         }
-        setTimeout(function() {
+        setTimeout(function () {
             this.placePointsOfInterest(map, controller);
         }.bind(this), 5000);
         if (window.DeviceOrientationEvent) {
@@ -118,10 +122,10 @@ class Map extends Component {
 
     handleRotation = (event) => {
         if (this.state.follow) {
-            const { alpha, beta, gamma } = event;
+            const {alpha, beta, gamma} = event;
             const heading = parseInt(this.convertToCompassHeading(alpha, beta, gamma));
 
-            console.log({ heading, alpha, beta, gamma });
+            console.log({heading, alpha, beta, gamma});
 
             this.setState({
                 orientation: heading
@@ -143,16 +147,15 @@ class Map extends Component {
 
     onMouseUp = (event) => {
         const mouseUpLoc = event.layerPoint;
-        const { mouseDownLoc, map, mouseDownOverride, lastCreatedMarker, markerController } = this.state;
+        const {mouseDownLoc, map, markerController} = this.state;
+        const {selectCoords} = this.props;
         const mouseMoved = mouseUpLoc.distanceTo(mouseDownLoc) > 3;
         markerController.deselectMarker();
-
-        if (!mouseMoved && map && !mouseDownOverride) {
-            const { lat, lng } = event.latlng;
-            markerController.removeMarker("Creating");
-            let mark = markerController.addMarker("Creating", [lat, lng], { iconKey: "alert" });
-            mark.addTo(map);
-            this.props.createQuestCallback(lat, lng);
+        console.log("Mouse Up");
+        if (!mouseMoved && map && selectCoords) {
+            const {lat, lng} = event.latlng;
+            console.log(`Selecting ${lat},${lng}`);
+            this.props.createQuestCallback([lat, lng]);
         }
     };
 
@@ -160,7 +163,7 @@ class Map extends Component {
     placePointsOfInterest = (map, controller) => {
         let markers = this.state.markers;
         let points = this.state.quests;
-        controller.addMarker("11111", this.props.initialPos, { iconKey: "aroundme" })
+        controller.addMarker("11111", this.props.initialPos, {iconKey: "aroundme"})
         for (let index in points) {
             if (points.hasOwnProperty(index)) {
                 let point = points[index];
@@ -168,7 +171,7 @@ class Map extends Component {
                     markers[point.id].remove()
                 }
                 let [lat, lng] = point.location;
-                let mark = controller.addMarker(point.id, [lat, lng], { iconKey: point.icon });
+                let mark = controller.addMarker(point.id, [lat, lng], {iconKey: point.icon});
                 let circle = window.L.circle(point.location, {
                     color: "red",
                     fillOpacity: 0,
@@ -256,32 +259,55 @@ class Map extends Component {
             zIndex: "-10"
         };
 
+        const {selectCoords, classes} = this.props;
+
         return (
 
             <div id="content" style={wrapperStyle}>
                 <Fab style={buttons.center} color="primary" aria-label="Return to Location" onClick={this.resetMapPos}>
-                    <MyLocation />
+                    <MyLocation/>
                 </Fab>
                 {window.DeviceOrientationEvent ?
                     <Fab color="secondary" style={buttons.left}
-                        onClick={() => this.setState({ follow: !this.state.follow })}>
-                        <ThreeSixty />
+                         onClick={() => this.setState({follow: !this.state.follow})}>
+                        <ThreeSixty/>
                     </Fab>
                     :
                     <div>
 
 
                         <Fab color="secondary" style={buttons.left} onClick={() => this.rotate(-1)}>
-                            <RotateLeft />
+                            <RotateLeft/>
                         </Fab>
                         < Fab color="secondary" style={buttons.right} onClick={() => this.rotate(1)}>
-                            <RotateRight />
+                            <RotateRight/>
                         </Fab>
                     </div>
                 }
 
-
-                <div id="map" style={mapStyle} />
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={this.props.selectCoords}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">Where did you lose the pet?</span>}
+                    action={[
+                        <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            className={classes.close}
+                            onClick={this.props.cancelCreateQuest}
+                        >
+                            <CloseIcon/>
+                        </IconButton>,
+                    ]}
+                />
+                <div id="map" style={mapStyle}/>
             </div>
         );
     }
@@ -325,4 +351,4 @@ class Map extends Component {
     }
 }
 
-export default Map;
+export default withStyles(styles)(Map);
