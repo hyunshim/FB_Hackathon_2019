@@ -29,19 +29,28 @@ exports.get_all_quests = (req, res, next) => {
     });
 }
 
-// exports.get_mark = (req, res, next) => {
-//     Quest.findOne({_id: id})
-//         .select(selectFields)
-//         .exec()
-//         .then(doc => {
-//             const response = {
-//                 mark: doc
-//             }
-//             res.status(200).json(response)
-//         })
-//         .catch(error => {res.status(500).json({error: error});
-//     })
-// }
+exports.get_quest = (req, res, next) => {
+    Quest.findOne({_id: id})
+        .select(selectFields)
+        .exec()
+        .then(doc => {
+            const response = {
+                name: doc.name,
+                author: doc.author,
+                location: doc.location,
+                date: doc.date,
+                reward: doc.reward,
+                comments: doc.comments,
+                description: doc.description,
+                imgurl: doc.imgurl,
+                icon: doc.icon,
+                id: doc._id
+            }
+            res.status(200).json(response)
+        })
+        .catch(error => {res.status(500).json({error: error});
+    })
+}
 
 exports.create_quest = (req, res, next) => {
     const quest = new Quest({
