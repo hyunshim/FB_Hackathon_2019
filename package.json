@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "set PORT=3333 && nodemon server.js",
+    "start": "set PORT=3000 && nodemon server.js",
     "front": "npm start --prefix front",
     "dev": "concurrently \"npm run start\" \"npm run front\""
   },
