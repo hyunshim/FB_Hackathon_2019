@@ -1,21 +1,30 @@
+#main {
+  margin: 0;
+  height: 100%;
+}
+
 .remove-btn {
-  margin-right: 0.5rem;
+    margin-right: 0.5rem;
 }
 
 .fade-enter {
-  opacity: 0.01;
+    opacity: 0.01;
 }
 
 .fade-enter-active {
-  opacity: 1;
-  transition: opacity 1000ms ease-in;
+    opacity: 1;
+    transition: opacity 1000ms ease-in;
 }
 
 .fade-exit {
-  opacity: 1;
+    opacity: 1;
 }
 
-.fade-exit-active{
-  opacity: 0.01;
-  transition: opacity 1000ms ease-out
+.fade-exit-active {
+    opacity: 0.01;
+    transition: opacity 1000ms ease-out
+}
+
+.leaflet-bottom.leaflet-right {
+    display: none;
 }

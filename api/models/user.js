@@ -1,11 +1,13 @@
 const mongo = require('mongoose');
 
-const markSchema = mongo.Schema({
+const userSchema = mongo.Schema({
     _id: mongo.Schema.Types.ObjectId,
     name: String,
     ph: String,
     address: String,
-    points: Number
+    experience: Number,
+    quests: Array,
+    title: { type: String, default: null }
 });
 
-module.exports = mongo.model('User', markSchema);
+module.exports = mongo.model('User', userSchema);

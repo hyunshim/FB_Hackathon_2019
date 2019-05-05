@@ -1,3 +1,4 @@
 export default {
-    marks: '/marks',
+    map: '/map',
+    login: '/login'
 }

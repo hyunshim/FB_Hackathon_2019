@@ -1,21 +1,20 @@
 import React, {Component} from 'react';
-import {BrowserRouter} from 'react-router-dom';
-
-import Marks from './components/Marks';
-
+import {BrowserRouter as Router, Route} from 'react-router-dom';
+// import Quests from './components/Quests';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css';
-import Map from "./components/Map";
+import Login from "./pages/Login";
+import AppParent from "./components/AppParent";
 
 class App extends Component {
 
     render() {
         return (
             <div id="main">
-                <BrowserRouter>
-                    <Marks/>
-                </BrowserRouter>
-                <Map/>
+                <Router>
+                    <Route exact path="/" component={Login}/>
+                    <Route path="/map" component={AppParent}/>
+                </Router>,
             </div>
         );
     }
