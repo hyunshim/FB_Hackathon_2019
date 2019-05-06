@@ -14,6 +14,6 @@
 
 #### Technology Used:
 
-- Node.js, REST API, MongoDB, React.js, wrld.js, JSON
+- Node.js, axios, MongoDB, React.js, wrld.js, JSON
 
 #### 
