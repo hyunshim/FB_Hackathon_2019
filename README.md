@@ -4,6 +4,12 @@
 
 ### Screenshots:
 
+![IMG_2768](https://github.com/yongjiajun/LostPets/blob/master/assets/IMG_2768.PNG?raw=true)
+
+![IMG_2768](https://github.com/yongjiajun/LostPets/blob/master/assets/IMG_2771.PNG?raw=true)
+
+![IMG_2768](https://github.com/yongjiajun/LostPets/blob/master/assets/IMG_2769.PNG?raw=true)
+
 
 
 #### Technology Used:
