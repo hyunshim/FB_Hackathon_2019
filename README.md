@@ -1,26 +1,13 @@
-# FB_Hackathon_2019
+# LostPets - a project for Facebook Melbourne Hackathon 2019
 
-## How to run
-1) Navigate to FB_Hackathon_2019
-2) cli command: npm run dev (This should run both back-end and front-end together)
+**LostPets** is a **mobile web app/game** that enables users to host lost pets ads as ‘quests’ on an interactive 3D map, **bringing the local community/adventurers together** by completing the ‘quests’ and rewarding heroes with in-app rewards using **gamification techniques**.
 
-
-
-# Models
-## Quest
-- name of quest: String
-- author of quest: String
-- location: (lat, lng)
-- quest post date: Date
-- quest reward, String ?
-- comments: Array
-- description: String
-- image link: String
+### Screenshots:
 
 
-## User
-- name of user: String
-- phone number: String
-- address: String
-- experience: Int
-- pinned quest: Array
+
+#### Technology Used:
+
+- Node.js, REST API, MongoDB, React.js, wrld.js, JSON
+
+#### 
